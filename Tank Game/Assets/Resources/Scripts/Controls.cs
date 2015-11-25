@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class Controls : MonoBehaviour {
+	public int hp = 1000;
 	public GameObject bulletPrefab;
 	private Vector2 coordinates;
 	public float speed = 1.5f;
@@ -38,6 +39,7 @@ public class Controls : MonoBehaviour {
 	void Update () {
 		Move();
 		Shoot ();
+		DetectCollision();
 	}
 	
 
@@ -82,9 +84,43 @@ public class Controls : MonoBehaviour {
 		
 	}
 	
-	void OnCollisionEnter2D(Collision2D col){
-		Debug.Log("collided with wall");
+	void DetectCollision(){
+		Vector3 direction = this.transform.position;
+		if(facing == Facing.faceUp){
+			direction = Vector3.up;
+		}
+		else if(facing == Facing.faceDown){
+			direction = Vector3.down;
+		}
+		else if(facing == Facing.faceRight){
+			direction = Vector3.right;
+		}
+		else if(facing == Facing.faceLeft){
+			direction = Vector3.left;
+		}
+	
+		RaycastHit2D hit = Physics2D.Raycast(this.transform.position,direction,0.3f);
+		Debug.DrawRay(this.transform.position,direction);
+		if(hit.collider.tag == "Breakable" || hit.collider.tag == "Unbreakable"){
+			speed = 0f;
+			Debug.Log("hit wall");
+		}
+		else{
+			speed = 1.5f;
+		}
 		
+	}
+	
+	void OnTriggerEnter2D(Collider2D col){
+		Bullet bull = col.gameObject.GetComponent<Bullet>();
+		if(bull){
+			Debug.Log("Hit");
+			bull.Hit();
+			hp -= bull.GetDamage();
+			if(hp <= 0){
+				Destroy(gameObject);
+			}
+		}
 	}
 	
 	void Shoot(){
