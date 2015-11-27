@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Controls2 : MonoBehaviour {
 	public GameObject bulletPrefab;
+	public GameObject shotLocation;
 	public int hp = 1000;
 	private Vector2 coordinates;
 	public float speed = 1.5f;
@@ -127,7 +128,9 @@ public class Controls2 : MonoBehaviour {
 		
 		if(Input.GetKeyDown(KeyCode.Slash)){
 			GameObject bullet = (GameObject) Instantiate(bulletPrefab,this.transform.position,Quaternion.identity);
+			GameObject shotLoc = (GameObject) Instantiate (shotLocation, this.transform.position, Quaternion.identity);
 			Rigidbody2D bulletRB = bullet.GetComponent<Rigidbody2D>();
+			bullet.transform.parent = shotLoc.transform;
 			if(facing == Facing.faceUp){
 				bulletRB.velocity = new Vector3(0, shotSpeed,this.transform.position.z);
 			}

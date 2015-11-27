@@ -3,7 +3,9 @@ using System.Collections;
 
 public class Controls : MonoBehaviour {
 	public int hp = 1000;
+	public LayerMask mask;
 	public GameObject bulletPrefab;
+	public GameObject shotLocation;
 	private Vector2 coordinates;
 	public float speed = 1.5f;
 	public float shotSpeed = 2.0f;
@@ -86,6 +88,7 @@ public class Controls : MonoBehaviour {
 	
 	void DetectCollision(){
 		Vector3 direction = this.transform.position;
+		
 		if(facing == Facing.faceUp){
 			direction = Vector3.up;
 		}
@@ -98,15 +101,18 @@ public class Controls : MonoBehaviour {
 		else if(facing == Facing.faceLeft){
 			direction = Vector3.left;
 		}
-	
-		RaycastHit2D hit = Physics2D.Raycast(this.transform.position,direction,0.3f);
-		Debug.DrawRay(this.transform.position,direction);
-		if(hit.collider.tag == "Breakable" || hit.collider.tag == "Unbreakable"){
-			speed = 0f;
-			Debug.Log("hit wall");
-		}
-		else{
-			speed = 1.5f;
+		Debug.DrawRay (transform.position, direction, Color.green, 0f, false);
+		RaycastHit2D hit = Physics2D.Raycast(this.transform.position,direction,0.1f,mask);
+		if(hit){
+			if(hit.collider != null){
+				if(hit.collider.tag == "Breakable" || hit.collider.tag == "Unbreakable"){
+					speed = 0f;	
+					Debug.Log("hit wall");
+				}
+				else{
+					speed = 1.5f;
+				}
+			}
 		}
 		
 	}
@@ -127,7 +133,9 @@ public class Controls : MonoBehaviour {
 		
 		if(Input.GetKeyDown(KeyCode.Q)){
 			GameObject bullet = (GameObject) Instantiate(bulletPrefab,this.transform.position,Quaternion.identity);
+			GameObject shotLoc = (GameObject) Instantiate (shotLocation, this.transform.position, Quaternion.identity);
 			Rigidbody2D bulletRB = bullet.GetComponent<Rigidbody2D>();
+			bullet.transform.parent = shotLoc.transform;
 			if(facing == Facing.faceUp){
 				bulletRB.velocity = new Vector3(0, shotSpeed,this.transform.position.z);
 			}
