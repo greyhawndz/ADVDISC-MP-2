@@ -11,6 +11,7 @@ public class Controls : MonoBehaviour {
 	public float shotSpeed = 2.0f;
 	private int currentSprite =1;
 	public Sprite[] sprites;
+	public AudioSource shootSound;
 	private SpriteRenderer spriteRenderer;
 	private enum Facing{
 		faceUp,
@@ -32,6 +33,7 @@ public class Controls : MonoBehaviour {
 		print("Hamburger");
 		facing = Facing.faceUp;
 		coordinates = this.transform.position;
+
 		
 	}
 	
@@ -42,6 +44,7 @@ public class Controls : MonoBehaviour {
 		Move();
 		Shoot ();
 		DetectCollision();
+
 	}
 	
 
@@ -130,8 +133,9 @@ public class Controls : MonoBehaviour {
 	}
 	
 	void Shoot(){
-		
+	
 		if(Input.GetKeyDown(KeyCode.Q)){
+			shootSound.Play();
 			GameObject bullet = (GameObject) Instantiate(bulletPrefab,this.transform.position,Quaternion.identity);
 			GameObject shotLoc = (GameObject) Instantiate (shotLocation, this.transform.position, Quaternion.identity);
 			Rigidbody2D bulletRB = bullet.GetComponent<Rigidbody2D>();

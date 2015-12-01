@@ -10,6 +10,7 @@ public class Controls2 : MonoBehaviour {
 	public float shotSpeed = 2.0f;
 	private int currentSprite = 9;
 	public Sprite[] sprites;
+	public AudioSource shootSound;
 	private SpriteRenderer spriteRenderer;
 	private enum Facing{
 		faceUp,
@@ -127,6 +128,7 @@ public class Controls2 : MonoBehaviour {
 	void Shoot(){
 		
 		if(Input.GetKeyDown(KeyCode.Slash)){
+			shootSound.Play();
 			GameObject bullet = (GameObject) Instantiate(bulletPrefab,this.transform.position,Quaternion.identity);
 			GameObject shotLoc = (GameObject) Instantiate (shotLocation, this.transform.position, Quaternion.identity);
 			Rigidbody2D bulletRB = bullet.GetComponent<Rigidbody2D>();
