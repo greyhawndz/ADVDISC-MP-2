@@ -9,9 +9,10 @@ public class Controls : MonoBehaviour {
 	private Vector2 coordinates;
 	public float speed = 1.5f;
 	public float shotSpeed = 2.0f;
-	public float wSpeedMult =1f;
-	public float aSpeedMult =1f;
-	public float sSpeedMult =1f;
+	public bool lockW = false;
+	public bool lockA = false;
+	public bool lockS = false;
+	public bool lockD = false;
 	public bool colliding =false;
 	public float dSpeedMult =1f;
 	private int currentSprite =1;
@@ -54,54 +55,65 @@ public class Controls : MonoBehaviour {
 		Move ();
 		Shoot ();
 		colliding = false;
-		//DetectCollision();
+
 
 	}
-	
 
 	void Move(){
-		if (Input.GetKey (KeyCode.W)) {
-			facing = Facing.faceUp;
-			coordinates.y +=speed * Time.deltaTime*wSpeedMult;
-			transform.localEulerAngles = new Vector3(0,0,0);
-			currentSprite++;	
-			aSpeedMult =1f;
-			sSpeedMult =1f;
-			dSpeedMult =1f;
-			
-		}
-		else if (Input.GetKey (KeyCode.S)) {
-			facing = Facing.faceDown;
-			coordinates.y-=speed * Time.deltaTime*sSpeedMult;
-			
-			transform.localEulerAngles = new Vector3(0,0,180);
-			currentSprite++;
-			wSpeedMult =1f;
-			aSpeedMult =1f;
-			dSpeedMult =1f;
-			
-		}
-		else if (Input.GetKey (KeyCode.A)) {
-			coordinates.x-=speed * Time.deltaTime*aSpeedMult;
-			facing = Facing.faceLeft;
-			transform.localEulerAngles = new Vector3(0,0,90);
-			currentSprite++;
-			wSpeedMult =1f;
-			sSpeedMult =1f;
-			dSpeedMult =1f;
-			
-		}
-		
-		else if (Input.GetKey (KeyCode.D)) {
-			coordinates.x+=speed * Time.deltaTime*dSpeedMult;
-			facing = Facing.faceRight;
-			transform.localEulerAngles = new Vector3(0,0,-90);
-			currentSprite++;
-			wSpeedMult =1f;
-			aSpeedMult =1f;
-			sSpeedMult =1f;
 
-		}
+		if (Input.GetKey (KeyCode.W) && !(lockW)) {
+			facing = Facing.faceUp;
+			coordinates.y += speed * Time.deltaTime;
+			transform.localEulerAngles = new Vector3 (0, 0, 0);
+			currentSprite++;
+			if(!Input.GetKey (KeyCode.S)&& !Input.GetKey (KeyCode.D)&& !Input.GetKey (KeyCode.A))
+			{
+			lockA=false;
+			lockS=false;
+			lockD=false;
+			}
+	
+		} else if (Input.GetKey (KeyCode.S) && !(lockS)) {
+			facing = Facing.faceDown;
+			coordinates.y -= speed * Time.deltaTime;
+			transform.localEulerAngles = new Vector3 (0, 0, 180);
+			currentSprite++;
+			if(!Input.GetKey (KeyCode.W)&& !Input.GetKey (KeyCode.D)&& !Input.GetKey (KeyCode.A))
+			{
+			lockW=false;
+			lockA=false;
+			lockD=false;
+			}
+
+			
+		} else if (Input.GetKey (KeyCode.A) && !(lockA)) {
+			coordinates.x -= speed * Time.deltaTime;
+			facing = Facing.faceLeft;
+			transform.localEulerAngles = new Vector3 (0, 0, 90);
+			currentSprite++;
+			if(!Input.GetKey (KeyCode.W)&& !Input.GetKey (KeyCode.D)&& !Input.GetKey (KeyCode.S))
+			{
+			lockD=false;
+			lockW=false;
+			lockS=false;
+			}
+
+			
+		} else if (Input.GetKey (KeyCode.D) && !(lockD)) {
+			coordinates.x += speed * Time.deltaTime;
+			facing = Facing.faceRight;
+			transform.localEulerAngles = new Vector3 (0, 0, -90);
+			currentSprite++;
+			if(!Input.GetKey (KeyCode.A)&& !Input.GetKey (KeyCode.W)&& !Input.GetKey (KeyCode.S))
+			{
+			lockA=false;
+			lockW=false;
+			lockS=false;
+			}
+
+
+
+		} 
 		if (currentSprite >= 9) {
 			currentSprite = (currentSprite % 9) + 1;
 		}
@@ -122,16 +134,16 @@ public class Controls : MonoBehaviour {
 			
 			if(facing == Facing.faceUp){
 
-				wSpeedMult = .00f;
+				lockW =true;
 							}
 			else if(facing == Facing.faceDown){
-				sSpeedMult = .00f;
+				lockS=true;
 			}
 			else if(facing == Facing.faceRight){
-				dSpeedMult = .00f;
+				lockD=true;
 			}
 			else if(facing == Facing.faceLeft){
-				aSpeedMult = .00f;
+				lockA=true;
 			}
 		}
 
