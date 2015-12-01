@@ -9,10 +9,17 @@ public class Controls : MonoBehaviour {
 	private Vector2 coordinates;
 	public float speed = 1.5f;
 	public float shotSpeed = 2.0f;
+	public float wSpeedMult =1f;
+	public float aSpeedMult =1f;
+	public float sSpeedMult =1f;
+	public bool colliding =false;
+	public float dSpeedMult =1f;
 	private int currentSprite =1;
 	public Sprite[] sprites;
 	public AudioSource shootSound;
 	private SpriteRenderer spriteRenderer;
+	Controls2 enemyControls;
+	GameObject enemy;
 	private enum Facing{
 		faceUp,
 		faceDown,
@@ -33,6 +40,9 @@ public class Controls : MonoBehaviour {
 		print("Hamburger");
 		facing = Facing.faceUp;
 		coordinates = this.transform.position;
+		enemy = GameObject.Find ("Player 2");
+		enemyControls = (Controls2)enemy.GetComponent("Controls2");
+
 
 		
 	}
@@ -41,9 +51,10 @@ public class Controls : MonoBehaviour {
 	
 
 	void Update () {
-		Move();
+		Move ();
 		Shoot ();
-		DetectCollision();
+		colliding = false;
+		//DetectCollision();
 
 	}
 	
@@ -51,33 +62,45 @@ public class Controls : MonoBehaviour {
 	void Move(){
 		if (Input.GetKey (KeyCode.W)) {
 			facing = Facing.faceUp;
-			coordinates.y +=speed * Time.deltaTime;
+			coordinates.y +=speed * Time.deltaTime*wSpeedMult;
 			transform.localEulerAngles = new Vector3(0,0,0);
 			currentSprite++;	
+			aSpeedMult =1f;
+			sSpeedMult =1f;
+			dSpeedMult =1f;
 			
 		}
 		else if (Input.GetKey (KeyCode.S)) {
 			facing = Facing.faceDown;
-			coordinates.y-=speed * Time.deltaTime;
+			coordinates.y-=speed * Time.deltaTime*sSpeedMult;
 			
 			transform.localEulerAngles = new Vector3(0,0,180);
 			currentSprite++;
+			wSpeedMult =1f;
+			aSpeedMult =1f;
+			dSpeedMult =1f;
 			
 		}
 		else if (Input.GetKey (KeyCode.A)) {
-			coordinates.x-=speed * Time.deltaTime;
+			coordinates.x-=speed * Time.deltaTime*aSpeedMult;
 			facing = Facing.faceLeft;
 			transform.localEulerAngles = new Vector3(0,0,90);
 			currentSprite++;
+			wSpeedMult =1f;
+			sSpeedMult =1f;
+			dSpeedMult =1f;
 			
 		}
 		
 		else if (Input.GetKey (KeyCode.D)) {
-			coordinates.x+=speed * Time.deltaTime;
+			coordinates.x+=speed * Time.deltaTime*dSpeedMult;
 			facing = Facing.faceRight;
 			transform.localEulerAngles = new Vector3(0,0,-90);
 			currentSprite++;
-			
+			wSpeedMult =1f;
+			aSpeedMult =1f;
+			sSpeedMult =1f;
+
 		}
 		if (currentSprite >= 9) {
 			currentSprite = (currentSprite % 9) + 1;
@@ -88,40 +111,32 @@ public class Controls : MonoBehaviour {
 		spriteRenderer.sprite = sprites[currentSprite];
 		
 	}
-	
-	void DetectCollision(){
-		Vector3 direction = this.transform.position;
-		
-		if(facing == Facing.faceUp){
-			direction = Vector3.up;
-		}
-		else if(facing == Facing.faceDown){
-			direction = Vector3.down;
-		}
-		else if(facing == Facing.faceRight){
-			direction = Vector3.right;
-		}
-		else if(facing == Facing.faceLeft){
-			direction = Vector3.left;
-		}
-		Debug.DrawRay (transform.position, direction, Color.green, 0f, false);
-		RaycastHit2D hit = Physics2D.Raycast(this.transform.position,direction,0.1f,mask);
-		if(hit){
-			if(hit.collider != null){
-				if(hit.collider.tag == "Breakable" || hit.collider.tag == "Unbreakable"){
-					speed = 0f;	
-					Debug.Log("hit wall");
-				}
-				else{
-					speed = 1.5f;
-				}
-			}
-		}
-		
-	}
+
 	
 	void OnTriggerEnter2D(Collider2D col){
+		colliding = true;
 		Bullet bull = col.gameObject.GetComponent<Bullet>();
+		BoxCollider2D bump = col.gameObject.GetComponent<BoxCollider2D>();
+		if (bump) {
+			print ("ouch my head" + facing);
+			
+			if(facing == Facing.faceUp){
+
+				wSpeedMult = .00f;
+							}
+			else if(facing == Facing.faceDown){
+				sSpeedMult = .00f;
+			}
+			else if(facing == Facing.faceRight){
+				dSpeedMult = .00f;
+			}
+			else if(facing == Facing.faceLeft){
+				aSpeedMult = .00f;
+			}
+		}
+
+
+
 		if(bull){
 			Debug.Log("Hit");
 			bull.Hit();
@@ -135,6 +150,7 @@ public class Controls : MonoBehaviour {
 	void Shoot(){
 	
 		if(Input.GetKeyDown(KeyCode.Q)){
+			//print ("Spied you!:" + enemyControls.hp);
 			shootSound.Play();
 			GameObject bullet = (GameObject) Instantiate(bulletPrefab,this.transform.position,Quaternion.identity);
 			GameObject shotLoc = (GameObject) Instantiate (shotLocation, this.transform.position, Quaternion.identity);
