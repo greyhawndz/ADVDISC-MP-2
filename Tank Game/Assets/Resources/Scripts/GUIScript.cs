@@ -8,20 +8,23 @@ public class GUIScript : MonoBehaviour {
 	public AudioClip music;
 	Controls2 enemyControls;
 	GameObject enemy;
+	Controls playerControls;
+	GameObject player;
 	// Use this for initialization
 	void Start () {
 		music = Resources.Load<AudioClip>("Audio/music"); 
 		enemy = GameObject.Find ("Player 2");
 		enemyControls = (Controls2)enemy.GetComponent("Controls2");
+
+		player = GameObject.Find ("Player");
+		playerControls = (Controls)player.GetComponent("Controls");
 		windowRect = new Rect(450, 150, 250, 250);
 
 	}
 	
 	// Update is called once per frame
 	void Update () {
-if (music == null) {
-			print("music does not work");
-		}
+
 		}
 	
 	public void OnGUI() {
@@ -33,6 +36,10 @@ if (music == null) {
 			GUI.Box (new Rect (405, 205, 250, 185), "Player 1 Wins");
 		}
 
+		if (playerControls == null)
+		{
+			GUI.Box (new Rect (405, 205, 250, 185), "Player 2 Wins");
+		}
 	
 	}
 }

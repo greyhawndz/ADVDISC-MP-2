@@ -7,6 +7,10 @@ public class Controls2 : MonoBehaviour {
 	public int hp = 1000;
 	private Vector2 coordinates;
 	public float speed = 1.5f;
+	public bool lockUp = false;
+	public bool lockLeft = false;
+	public bool lockDown = false;
+	public bool lockRight = false;
 	public float shotSpeed = 2.0f;
 	private int currentSprite = 9;
 	public Sprite[] sprites;
@@ -46,34 +50,59 @@ public class Controls2 : MonoBehaviour {
 	
 	
 	void Move(){
-		if (Input.GetKey (KeyCode.UpArrow)) {
+		if (Input.GetKey (KeyCode.UpArrow)&& !(lockUp)) {
 			facing = Facing.faceUp;
 			coordinates.y +=speed * Time.deltaTime;
 			transform.localEulerAngles = new Vector3(0,0,180);
 			currentSprite++;	
+
+			if(!Input.GetKey (KeyCode.DownArrow)&& !Input.GetKey (KeyCode.RightArrow)&& !Input.GetKey (KeyCode.LeftArrow))
+			{
+				lockLeft=false;
+				lockDown=false;
+				lockRight=false;
+			}
 			
 		}
-		else if (Input.GetKey (KeyCode.DownArrow)) {
+		else if (Input.GetKey (KeyCode.DownArrow)&& !(lockDown)) {
 			facing = Facing.faceDown;
 			coordinates.y-=speed * Time.deltaTime;
 			
 			transform.localEulerAngles = new Vector3(0,0,0);
 			currentSprite++;
+			if(!Input.GetKey (KeyCode.UpArrow)&& !Input.GetKey (KeyCode.RightArrow)&& !Input.GetKey (KeyCode.LeftArrow))
+			{
+				lockUp=false;
+				lockRight=false;
+				lockLeft=false;
+			}
 			
 		}
-		else if (Input.GetKey (KeyCode.LeftArrow)) {
+		else if (Input.GetKey (KeyCode.LeftArrow)&& !(lockLeft)) {
 			coordinates.x-=speed * Time.deltaTime;
 			facing = Facing.faceLeft;
 			transform.localEulerAngles = new Vector3(0,0,-90);
 			currentSprite++;
+			if(!Input.GetKey (KeyCode.UpArrow)&& !Input.GetKey (KeyCode.RightArrow)&& !Input.GetKey (KeyCode.DownArrow))
+			{
+				lockRight=false;
+				lockUp=false;
+				lockDown=false;
+			}
 			
 		}
 		
-		else if (Input.GetKey (KeyCode.RightArrow)) {
+		else if (Input.GetKey (KeyCode.RightArrow)&& !(lockRight)) {
 			coordinates.x+=speed * Time.deltaTime;
 			facing = Facing.faceRight;
 			transform.localEulerAngles = new Vector3(0,0,90);
 			currentSprite++;
+			if(!Input.GetKey (KeyCode.LeftArrow)&& !Input.GetKey (KeyCode.UpArrow)&& !Input.GetKey (KeyCode.DownArrow))
+			{
+				lockLeft=false;
+				lockUp=false;
+				lockDown=false;
+			}
 			
 		}
 		if (currentSprite >= 16) {
@@ -85,36 +114,29 @@ public class Controls2 : MonoBehaviour {
 		spriteRenderer.sprite = sprites[currentSprite];
 		
 	}
-	
-	void DetectCollision(){
-		Vector3 direction = this.transform.position;
-		if(facing == Facing.faceUp){
-			direction = Vector3.up;
-		}
-		else if(facing == Facing.faceDown){
-			direction = Vector3.down;
-		}
-		else if(facing == Facing.faceRight){
-			direction = Vector3.right;
-		}
-		else if(facing == Facing.faceLeft){
-			direction = Vector3.left;
-		}
-		
-		RaycastHit2D hit = Physics2D.Raycast(this.transform.position,direction,0.3f);
-		Debug.DrawRay(this.transform.position,direction);
-		if(hit.collider.tag == "Breakable" || hit.collider.tag == "Unbreakable"){
-			speed = 0f;
-			Debug.Log("hit wall");
-		}
-		else{
-			speed = 1.5f;
-		}
-		
-	}
+
 	
 	void OnTriggerEnter2D(Collider2D col){
 		Bullet bull = col.gameObject.GetComponent<Bullet>();
+		BoxCollider2D bump = col.gameObject.GetComponent<BoxCollider2D>();
+		if (bump) {
+			print ("ouch my head" + facing);
+			
+			if(facing == Facing.faceUp){
+				
+				lockUp =true;
+			}
+			else if(facing == Facing.faceDown){
+				lockDown=true;
+			}
+			else if(facing == Facing.faceRight){
+				lockRight=true;
+			}
+			else if(facing == Facing.faceLeft){
+				lockLeft=true;
+			}
+		}
+
 		if(bull){
 			Debug.Log("Hit");
 			bull.Hit();
