@@ -5,6 +5,7 @@ public class Controls : MonoBehaviour {
 	public int hp = 1000;
 	public LayerMask mask;
 	public GameObject bulletPrefab;
+	public GameObject explosionPrefab;
 	public GameObject shotLocation;
 	public Vector2 coordinates;
 	public float speed = 1.5f;
@@ -156,7 +157,9 @@ public class Controls : MonoBehaviour {
 			hp -= bull.GetDamage();
 			if(hp <= 0){
 				//Destroy(gameObject);
+				Instantiate(explosionPrefab, new Vector3(this.transform.position.x,this.transform.position.y,this.transform.position.z), Quaternion.Euler(0,180,0));
 				gameObject.active =false;
+				
 			}
 		}
 	}

@@ -4,6 +4,7 @@ using System.Collections;
 public class Controls2 : MonoBehaviour {
 	public GameObject bulletPrefab;
 	public GameObject shotLocation;
+	public GameObject explosionPrefab;
 	public int hp = 1000;
 	public Vector2 coordinates;
 	public float speed = 1.5f;
@@ -143,6 +144,7 @@ public class Controls2 : MonoBehaviour {
 			hp -= bull.GetDamage();
 			if(hp <= 0){
 				//Destroy(gameObject);
+				Instantiate(explosionPrefab, new Vector3(this.transform.position.x,this.transform.position.y,this.transform.position.z), Quaternion.Euler(0,180,0));
 				gameObject.active =false;
 			}
 		}
