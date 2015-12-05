@@ -30,14 +30,19 @@ public class GUIScript : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		dataBox1Content = "HP: " + playerControls.hp + "/200\n\n"; 
+	void Update ()
+    {
+        dataBox1Content = "Movement: WASD\nShoot: Q\n\n";
+		dataBox1Content += "HP: " + playerControls.hp + "/200\n\n"; 
 		dataBox1Content += "Coordinates: \nX:" + playerControls.coordinates.x + "\nY: " + playerControls.coordinates.y ;
-		dataBox2Content = "HP: " + enemyControls.hp + "/200\n\n"; 
+
+        dataBox2Content = "Movement: Arrow Keys\nShoot: /\n\n";
+        dataBox2Content += "HP: " + enemyControls.hp + "/200\n\n"; 
 		dataBox2Content += "Coordinates: \nX:" + enemyControls.coordinates.x + "\nY: " + enemyControls.coordinates.y ;
 
 	
 	}
+
 	public void victoryStuff()
 	{		
 
