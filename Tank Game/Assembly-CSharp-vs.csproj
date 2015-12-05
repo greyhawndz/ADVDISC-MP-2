@@ -50,6 +50,7 @@
      <Compile Include="Assets\Resources\Scripts\Controls.cs" />
      <Compile Include="Assets\Resources\Scripts\Controls2.cs" />
      <Compile Include="Assets\Resources\Scripts\GUIScript.cs" />
+     <Compile Include="Assets\Resources\Scripts\LevelManager.cs" />
      <Compile Include="Assets\Resources\Scripts\Shredder.cs" />
      <Compile Include="Assets\Resources\Scripts\WallBlock.cs" />
  <Reference Include="UnityEngine.UI">

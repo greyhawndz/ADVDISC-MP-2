@@ -14,7 +14,12 @@ public class GUIScript : MonoBehaviour {
 	Controls playerControls;
 	GameObject player;
 	bool noRepeat=false;
+	LevelManager man;
 	// Use this for initialization
+	
+	void Awake(){
+		man = GameObject.FindObjectOfType<LevelManager>();
+	}
 	void Start () {
 		bgm.Play ();
 		//music = Resources.Load<AudioClip>("Audio/music"); 
@@ -55,7 +60,7 @@ public class GUIScript : MonoBehaviour {
 
 	}
 	public void restart()
-	{victory.Stop();
+	{	/*victory.Stop();
 		bgm.Play ();
 		enemyControls.hp =200;
 		enemyControls.coordinates.x =10;
@@ -67,7 +72,8 @@ public class GUIScript : MonoBehaviour {
 		playerControls.coordinates.y =.6f;
 		player.active =true;
 
-		noRepeat = false;
+		noRepeat = false;*/
+		man.LoadLevel("Tank Game");
 	}
 	
 	public void OnGUI() {
