@@ -5,7 +5,7 @@ public class Controls2 : MonoBehaviour {
 	public GameObject bulletPrefab;
 	public GameObject shotLocation;
 	public int hp = 1000;
-	private Vector2 coordinates;
+	public Vector2 coordinates;
 	public float speed = 1.5f;
 	public bool lockUp = false;
 	public bool lockLeft = false;
@@ -23,7 +23,7 @@ public class Controls2 : MonoBehaviour {
 		faceRight	
 	};
 	private Facing facing;
-	private Rigidbody2D rigid;
+	public Rigidbody2D rigid;
 	
 	void Awake(){
 		sprites = Resources.LoadAll<Sprite>("Sprites/sprite"); 
@@ -37,7 +37,7 @@ public class Controls2 : MonoBehaviour {
 		print("Hamburger");
 		facing = Facing.faceDown;
 		coordinates = this.transform.position;
-		
+		print (coordinates);
 	}
 	
 	// Update is called once per frame
@@ -142,7 +142,8 @@ public class Controls2 : MonoBehaviour {
 			bull.Hit();
 			hp -= bull.GetDamage();
 			if(hp <= 0){
-				Destroy(gameObject);
+				//Destroy(gameObject);
+				gameObject.active =false;
 			}
 		}
 	}

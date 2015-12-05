@@ -6,7 +6,7 @@ public class Controls : MonoBehaviour {
 	public LayerMask mask;
 	public GameObject bulletPrefab;
 	public GameObject shotLocation;
-	private Vector2 coordinates;
+	public Vector2 coordinates;
 	public float speed = 1.5f;
 	public float shotSpeed = 2.0f;
 	public bool lockW = false;
@@ -28,7 +28,7 @@ public class Controls : MonoBehaviour {
 		faceRight	
 	};
 	private Facing facing;
-	private Rigidbody2D rigid;
+	public Rigidbody2D rigid;
 	void Awake(){
 		sprites = Resources.LoadAll<Sprite>("Sprites/sprite"); 
 		spriteRenderer = GetComponent<SpriteRenderer>();
@@ -41,6 +41,7 @@ public class Controls : MonoBehaviour {
 		print("Hamburger");
 		facing = Facing.faceUp;
 		coordinates = this.transform.position;
+
 		enemy = GameObject.Find ("Player 2");
 		enemyControls = (Controls2)enemy.GetComponent("Controls2");
 
@@ -154,7 +155,8 @@ public class Controls : MonoBehaviour {
 			bull.Hit();
 			hp -= bull.GetDamage();
 			if(hp <= 0){
-				Destroy(gameObject);
+				//Destroy(gameObject);
+				gameObject.active =false;
 			}
 		}
 	}
